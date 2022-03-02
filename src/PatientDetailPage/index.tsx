@@ -11,7 +11,7 @@ import { Patient } from '../types';
 import { apiBaseUrl } from '../constants';
 
 const PatientDetailPage = () => {
-  const [{ patients }, dispatch] = useStateValue();
+  const [{ patients, diagnosis }, dispatch] = useStateValue();
   const { id } = useParams<{ id: string }>();
 
   const patient = patients[id];
@@ -83,7 +83,7 @@ const PatientDetailPage = () => {
             <ul>
               { entry.diagnosisCodes.map(code => 
                 <li key={code}>
-                  { code }
+                  { code } { diagnosis[code].name }
                 </li>
               )}
             </ul>
