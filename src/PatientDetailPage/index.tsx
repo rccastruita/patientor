@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
+import Stack from '@mui/material/Stack';
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
 import TransgenderIcon from '@mui/icons-material/Transgender';
@@ -10,8 +11,10 @@ import { addPatient, useStateValue } from '../state';
 import { Patient } from '../types';
 import { apiBaseUrl } from '../constants';
 
+import PatientEntry from './PatientEntry';
+
 const PatientDetailPage = () => {
-  const [{ patients, diagnosis }, dispatch] = useStateValue();
+  const [{ patients }, dispatch] = useStateValue();
   const { id } = useParams<{ id: string }>();
 
   const patient = patients[id];
@@ -72,24 +75,14 @@ const PatientDetailPage = () => {
         Occupation: { patient.occupation }
       </p>
       <h3>Entries</h3>
-      { patient.entries.length === 0 &&
-        <p><i>No entries recorded.</i></p>
+      { patient.entries.length === 0
+        ? <p><i>No entries recorded.</i></p>
+        : <Stack spacing={2} >
+          { patient.entries.map(entry =>
+            <PatientEntry key={entry.id} entry={entry} />
+          )}
+        </Stack>
       }
-
-      { patient.entries.map(entry => (
-        <div key={entry.id}>
-          <strong>{ entry.date }</strong> - { entry.description }
-          { entry.diagnosisCodes && 
-            <ul>
-              { entry.diagnosisCodes.map(code => 
-                <li key={code}>
-                  { code } { diagnosis[code].name }
-                </li>
-              )}
-            </ul>
-          }
-        </div>
-      )) }
     </div>
   );
 };
